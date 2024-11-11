@@ -10,8 +10,8 @@ export  interface AuthContextType {
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 const predefinedCredentials = {
-  username: 'admin',
-  password: '123',
+  username: import.meta.env.VITE_LOGIN_USER,
+  password: import.meta.env.VITE_LOGIN_PASSWORD,
 };
 
  const AuthProvider:React.FC<{ children: ReactNode }> = ({ children } ) => {

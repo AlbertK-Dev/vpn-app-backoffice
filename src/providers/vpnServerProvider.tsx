@@ -60,7 +60,7 @@ export const VpnServerContext = createContext<VpnServerContextType | undefined>(
 
   // Pagination states
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [itemsPerPage, setItemsPerPage] = useState<number>(3);
+  const [itemsPerPage, setItemsPerPage] = useState<number>(4);
 
   const lastFuncRef = useRef<(() => Promise<void>) | null>(null);
 
