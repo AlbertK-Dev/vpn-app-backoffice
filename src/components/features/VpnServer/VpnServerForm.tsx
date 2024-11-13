@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Dialog, DialogTitle, DialogContent, TextField, Button, Select, MenuItem, InputLabel, FormControl } from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, TextField, Button, Select, MenuItem, InputLabel, FormControl, SelectChangeEvent } from '@mui/material';
 import ReactCountryFlag from 'react-country-flag';
 import CountrySelect from 'react-select-country-list';
 import { VpnServer } from '../../../api/vpn-server.api';
@@ -82,8 +82,8 @@ const VpnServerForm: React.FC<VpnServerFormProps> = ({ open, onClose, onCreate, 
     onClose();
   };
 
-  const handleCountryChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    const countryCode = event.target.value as string;
+  const handleCountryChange = (event: SelectChangeEvent<string>) => {
+    const countryCode = event.target.value;
     const selectedCountry = countries.find((c) => c.value === countryCode);
     if (selectedCountry) {
       setCountry(selectedCountry.label); // Nom complet du pays
