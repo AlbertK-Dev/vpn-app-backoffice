@@ -5,8 +5,8 @@ import CountrySelect from 'react-select-country-list';
 import { VpnServer } from '../../../api/vpn-server.api';
 
 interface CountryOption {
-  value: string; // code du pays (ex: "FR")
-  label: string; // nom complet du pays (ex: "France")
+  value: string;
+  label: string; 
 }
 
 interface VpnServerFormProps {
@@ -86,8 +86,8 @@ const VpnServerForm: React.FC<VpnServerFormProps> = ({ open, onClose, onCreate, 
     const countryCode = event.target.value;
     const selectedCountry = countries.find((c) => c.value === countryCode);
     if (selectedCountry) {
-      setCountry(selectedCountry.label); // Nom complet du pays
-      setFlag(selectedCountry.value); // Code du pays pour le drapeau
+      setCountry(selectedCountry.label); 
+      setFlag(selectedCountry.value); 
     }
   };
 
