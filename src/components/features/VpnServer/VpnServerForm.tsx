@@ -5,8 +5,8 @@ import CountrySelect from 'react-select-country-list';
 import { VpnServer } from '../../../api/vpn-server.api';
 
 interface CountryOption {
-  value: string;
-  label: string;
+  value: string; // code du pays (ex: "FR")
+  label: string; // nom complet du pays (ex: "France")
 }
 
 interface VpnServerFormProps {
@@ -20,6 +20,7 @@ interface VpnServerFormProps {
 
 const VpnServerForm: React.FC<VpnServerFormProps> = ({ open, onClose, onCreate, onUpdate, mode, server }) => {
   const [country, setCountry] = useState<string>(server?.country || '');
+  const [flag, setFlag] = useState<string>(server?.flag || '');
   const [address, setAddress] = useState<string>(server?.address || '');
   const [speed, setSpeed] = useState<number>(server?.speed || 1);
   const [countries, setCountries] = useState<CountryOption[]>([]);
@@ -33,6 +34,7 @@ const VpnServerForm: React.FC<VpnServerFormProps> = ({ open, onClose, onCreate, 
   useEffect(() => {
     if (mode === 'update' && server) {
       setCountry(server.country);
+      setFlag(server.flag);
       setAddress(server.address);
       setSpeed(server.speed);
     }
@@ -69,7 +71,7 @@ const VpnServerForm: React.FC<VpnServerFormProps> = ({ open, onClose, onCreate, 
       country,
       address,
       speed,
-      flag: country.toUpperCase(),
+      flag,
     };
 
     if (mode === 'create') {
@@ -80,9 +82,17 @@ const VpnServerForm: React.FC<VpnServerFormProps> = ({ open, onClose, onCreate, 
     onClose();
   };
 
+  const handleCountryChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    const countryCode = event.target.value as string;
+    const selectedCountry = countries.find((c) => c.value === countryCode);
+    if (selectedCountry) {
+      setCountry(selectedCountry.label); // Nom complet du pays
+      setFlag(selectedCountry.value); // Code du pays pour le drapeau
+    }
+  };
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-    if (name === 'country') setCountry(value);
     if (name === 'address') setAddress(value);
     if (name === 'speed') {
       const parsedSpeed = Number(value);
@@ -105,14 +115,14 @@ const VpnServerForm: React.FC<VpnServerFormProps> = ({ open, onClose, onCreate, 
         <FormControl fullWidth margin="normal">
           <InputLabel>Country</InputLabel>
           <Select
-            value={country}
-            onChange={(e) => setCountry(e.target.value)}
+            value={flag}
+            onChange={handleCountryChange}
             name="country"
             disabled={mode === 'view'}
           >
             {countries.map((item) => (
               <MenuItem key={item.value} value={item.value}>
-                <ReactCountryFlag countryCode={item.value} style={{ width: 20, marginLeft: 8 }} />
+                <ReactCountryFlag countryCode={item.value} style={{ width: 20, marginRight: 8 }} />
                 {item.label}
               </MenuItem>
             ))}
