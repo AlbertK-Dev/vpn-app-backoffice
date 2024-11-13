@@ -20,6 +20,7 @@ import { useTheme } from '@mui/material/styles';
 import { useAuth } from '../../hooks/useAuth';
 import { useVpnServer } from '../../hooks/useVpnServer';
 import VpnServerState from '../../components/features/VpnServer/VpnServerState';
+import logo from "../../assets/icon.png"
 
 const VpnServerManager: React.FC = () => {
   const theme = useTheme();
@@ -51,9 +52,13 @@ const VpnServerManager: React.FC = () => {
         gap={isMobile ? 1 : 0}
         marginBottom={2}
       >
-        <Typography variant="h5" component="h1">
+        <Box display={"flex"} flexDirection={"row"} justifyContent={"flex-start"} alignItems={"center"}>
+          <img src={logo} height={"64px"}  width={"64px"}/>
+           <Typography variant="h5" component="h1">
           VPN Server Manager
         </Typography>
+        </Box>
+       
         <Button
           variant="contained"
           color="secondary"
