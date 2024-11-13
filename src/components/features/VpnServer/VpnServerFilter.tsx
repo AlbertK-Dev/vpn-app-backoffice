@@ -52,6 +52,8 @@ const VpnServerFilter: React.FC = () => {
         value={minSpeed}
         onChange={handleMinSpeedChange}
         type="number"
+        inputProps={{ min: 1, max: 5 }}
+        sx={{minWidth:100}}
       />
     </Box>
   );

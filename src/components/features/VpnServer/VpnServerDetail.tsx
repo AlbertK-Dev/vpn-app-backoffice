@@ -19,8 +19,8 @@ const VpnServerDetail: React.FC<VpnServerDetailProps> = ({ open, onClose, server
         <Typography>Country: {server.country}</Typography>
         <Typography>Address: {server.address}</Typography>
         <Typography>Speed: {server.speed}</Typography>
-        <Typography>Created At: {server._createdAt ? new Date(server._createdAt).toLocaleDateString() : 'N/A'}</Typography>
-<Typography>Updated At: {server._updatedAt ? new Date(server._updatedAt).toLocaleDateString() : 'N/A'}</Typography>
+        <Typography>Created At: {server.createdAt ? new Date(server.createdAt).toLocaleDateString() : 'N/A'}</Typography>
+<Typography>Updated At: {server.updatedAt ? new Date(server.updatedAt).toLocaleDateString() : 'N/A'}</Typography>
 
       </DialogContent>
     </Dialog>

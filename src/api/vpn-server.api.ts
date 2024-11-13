@@ -7,8 +7,8 @@ export interface VpnServer {
   address: string;
   speed: number; // Speed range from 1 to 5
   flag: string;  // ISO country code (e.g., 'FR' for France)
-  _createdAt?: string; // Date de création au format ISO
-  _updatedAt?: string; // Date de mise à jour au format ISO
+  createdAt?: string; // Date de création au format ISO
+  updatedAt?: string; // Date de mise à jour au format ISO
 }
 
 // Helper function to handle fetch responses

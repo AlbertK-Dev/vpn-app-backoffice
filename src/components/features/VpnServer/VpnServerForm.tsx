@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogTitle, DialogContent, TextField, Button, Select, MenuItem, InputLabel, FormControl } from '@mui/material';
-import ReactCountryFlag from 'react-country-flag';  // Pour afficher les drapeaux
-import CountrySelect from 'react-select-country-list';  // Pour obtenir la liste des pays
+import ReactCountryFlag from 'react-country-flag';
+import CountrySelect from 'react-select-country-list';
 import { VpnServer } from '../../../api/vpn-server.api';
 
-// Définition manuelle du type Option pour chaque pays
 interface CountryOption {
-    value: string; // Code ISO du pays
-    label: string; // Nom du pays
-  }
-  
+  value: string;
+  label: string;
+}
 
 interface VpnServerFormProps {
   open: boolean;
@@ -24,15 +22,14 @@ const VpnServerForm: React.FC<VpnServerFormProps> = ({ open, onClose, onCreate, 
   const [country, setCountry] = useState<string>(server?.country || '');
   const [address, setAddress] = useState<string>(server?.address || '');
   const [speed, setSpeed] = useState<number>(server?.speed || 1);
-  const [countries, setCountries] = useState<CountryOption[]>([]); // Liste des pays
+  const [countries, setCountries] = useState<CountryOption[]>([]);
+  const [errors, setErrors] = useState<{ address?: string; speed?: string }>({});
 
-  // Charger la liste des pays depuis react-select-country-list
   useEffect(() => {
     const countryList = CountrySelect().getData();
     setCountries(countryList);
   }, []);
 
-  // Reset form when server changes (for update mode)
   useEffect(() => {
     if (mode === 'update' && server) {
       setCountry(server.country);
@@ -41,17 +38,44 @@ const VpnServerForm: React.FC<VpnServerFormProps> = ({ open, onClose, onCreate, 
     }
   }, [mode, server]);
 
+  // Fonction pour valider l'URL (http/https requis, accepte IP avec port)
+  const validateAddress = (url: string) => {
+    const regex = /^(https?:\/\/)(([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}|(\d{1,3}\.){3}\d{1,3})(:\d+)?(\/[^\s]*)?$/;
+    return regex.test(url);
+  };
+
+  // Fonction pour gérer la validation des champs
+  const validateForm = () => {
+    let valid = true;
+    const newErrors: { address?: string; speed?: string } = {};
+
+    if (!validateAddress(address)) {
+      newErrors.address = 'Please enter a valid HTTP/HTTPS URL or IP address (with optional port).';
+      valid = false;
+    }
+    if (speed < 1 || speed > 5) {
+      newErrors.speed = 'Speed must be between 1 and 5.';
+      valid = false;
+    }
+
+    setErrors(newErrors);
+    return valid;
+  };
+
   const handleSubmit = () => {
-    const vpnServer: Partial<VpnServer> = { 
-      country, 
-      address, 
-      speed, 
-      flag: country.toUpperCase() // Le flag est le code ISO du pays (ex: 'FR' pour la France)
+    if (!validateForm()) return;
+
+    const vpnServer: Partial<VpnServer> = {
+      country,
+      address,
+      speed,
+      flag: country.toUpperCase(),
     };
+
     if (mode === 'create') {
       onCreate(vpnServer);
     } else if (mode === 'update') {
-      onUpdate({ ...server, ...vpnServer });  // Inclut l'ID pour la mise à jour
+      onUpdate({ ...server, ...vpnServer });
     }
     onClose();
   };
@@ -60,7 +84,18 @@ const VpnServerForm: React.FC<VpnServerFormProps> = ({ open, onClose, onCreate, 
     const { name, value } = event.target;
     if (name === 'country') setCountry(value);
     if (name === 'address') setAddress(value);
-    if (name === 'speed') setSpeed(Number(value));
+    if (name === 'speed') {
+      const parsedSpeed = Number(value);
+      setSpeed(parsedSpeed);
+      if (parsedSpeed < 1 || parsedSpeed > 5) {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          speed: 'Speed must be between 1 and 5.',
+        }));
+      } else {
+        setErrors((prevErrors) => ({ ...prevErrors, speed: '' }));
+      }
+    }
   };
 
   return (
@@ -92,8 +127,10 @@ const VpnServerForm: React.FC<VpnServerFormProps> = ({ open, onClose, onCreate, 
           margin="normal"
           name="address"
           disabled={mode === 'view'}
+          error={!!errors.address}
+          helperText={errors.address}
         />
-        
+
         <TextField
           label="Speed (1-5)"
           type="number"
@@ -103,6 +140,9 @@ const VpnServerForm: React.FC<VpnServerFormProps> = ({ open, onClose, onCreate, 
           margin="normal"
           name="speed"
           disabled={mode === 'view'}
+          error={!!errors.speed}
+          helperText={errors.speed}
+          inputProps={{ min: 1, max: 5 }}
         />
 
         {mode !== 'view' && (

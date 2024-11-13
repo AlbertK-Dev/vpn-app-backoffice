@@ -9,10 +9,10 @@ const {sortBy, setSortBy} = useVpnServer()
 
   return (
     <Box>
-      <Select value={sortBy} onChange={(e) => setSortBy(e.target.value as 'speed' | '_createdAt' | '_updatedAt')} displayEmpty>
+      <Select value={sortBy} onChange={(e) => setSortBy(e.target.value as 'speed' | 'createdAt' | 'updatedAt')} displayEmpty>
         <MenuItem value="speed">Speed</MenuItem>
-        <MenuItem value="_createdAt">Created Date</MenuItem>
-        <MenuItem value="_updatedAt">Updated Date</MenuItem>
+        <MenuItem value="createdAt">Created Date</MenuItem>
+        <MenuItem value="updatedAt">Updated Date</MenuItem>
       </Select>
     </Box>
   );

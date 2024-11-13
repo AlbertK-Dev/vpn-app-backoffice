@@ -2,7 +2,7 @@ import React, { createContext,  useState, useEffect, useCallback, useMemo, React
 import { getAllVpnServers, addVpnServer, updateVpnServer, deleteVpnServer } from '../api/vpn-server.api';
 import type { VpnServer } from '../api/vpn-server.api';
 
-type SortBy = 'speed' | '_createdAt' | '_updatedAt';
+type SortBy = 'speed' | 'createdAt' | 'updatedAt';
 type SortOrder = 'asc' | 'desc';
 
 type VpnServerFilter = {
@@ -54,8 +54,8 @@ export const VpnServerContext = createContext<VpnServerContextType | undefined>(
   const [success, setSuccess] = useState<string | null>(null);
 
   const [filter, setFilter] = useState<VpnServerFilter>({});
-  const [sortBy, setSortBy] = useState<SortBy>('speed');
-  const [sortOrder, setSortOrder] = useState<SortOrder>('asc');
+  const [sortBy, setSortBy] = useState<SortBy>('updatedAt');
+  const [sortOrder, setSortOrder] = useState<SortOrder>("desc");
   const [searchQuery, setSearchQuery] = useState<string>('');
 
   // Pagination states
