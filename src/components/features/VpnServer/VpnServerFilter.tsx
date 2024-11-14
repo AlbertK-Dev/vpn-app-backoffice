@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { TextField, Select, MenuItem, Box, SelectChangeEvent } from '@mui/material';
+import { TextField, Select, MenuItem, Box, SelectChangeEvent, useMediaQuery } from '@mui/material';
 import ReactCountryFlag from 'react-country-flag';
 import CountrySelect from 'react-select-country-list';
 import { useVpnServer } from '../../../hooks/useVpnServer';
@@ -11,7 +11,7 @@ interface CountryOption {
 }
 
 const VpnServerFilter: React.FC = () => {
-  const {  setFilter } = useVpnServer();
+  const { setFilter } = useVpnServer();
   const [country, setCountry] = useState<string>('');
   const [minSpeed, setMinSpeed] = useState<string>('');
   const [countries, setCountries] = useState<CountryOption[]>([]);
@@ -25,7 +25,7 @@ const VpnServerFilter: React.FC = () => {
   const handleCountryChange = (event: SelectChangeEvent<string>) => {
     const newCountry = event.target.value;
     setCountry(newCountry);
-    setFilter({ country: newCountry, minSpeed:+minSpeed });
+    setFilter({ country: newCountry, minSpeed: +minSpeed });
   };
 
   const handleMinSpeedChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -34,9 +34,22 @@ const VpnServerFilter: React.FC = () => {
     setFilter({ country, minSpeed: +newMinSpeed });
   };
 
+  const isSmallScreen = useMediaQuery('(max-width:600px)');
+
   return (
-    <Box display="flex" gap={2}>
-      <Select value={country} onChange={handleCountryChange} displayEmpty>
+    <Box
+      display="flex"
+      flexDirection={isSmallScreen ? 'column' : 'row'}
+      gap={2}
+      alignItems="center"
+      sx={{ width: '100%' }}
+    >
+      <Select
+        value={country}
+        onChange={handleCountryChange}
+        displayEmpty
+        sx={{ minWidth: isSmallScreen ? '100%' : 200 }}
+      >
         <MenuItem value="">
           <em>All Countries</em>
         </MenuItem>
@@ -53,7 +66,7 @@ const VpnServerFilter: React.FC = () => {
         onChange={handleMinSpeedChange}
         type="number"
         inputProps={{ min: 1, max: 5 }}
-        sx={{minWidth:100}}
+        sx={{ minWidth: isSmallScreen ? '100%' : 200 }}
       />
     </Box>
   );
