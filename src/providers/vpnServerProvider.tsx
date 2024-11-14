@@ -133,7 +133,7 @@ export const VpnServerContext = createContext<VpnServerContextType | undefined>(
 
     const countryFilter = filter.country?.toLowerCase();
     if (countryFilter) {
-      filtered = filtered.filter((server) => server.country.toLowerCase().includes(countryFilter));
+      filtered = filtered.filter((server) => server.country.toLowerCase().includes(countryFilter)|| server.flag.toLowerCase().includes(countryFilter));
     }
 
     const minSpeedFilter = filter.minSpeed;
@@ -162,6 +162,12 @@ export const VpnServerContext = createContext<VpnServerContextType | undefined>(
   }, [filteredAndSortedServers, currentPage, itemsPerPage]);
 
   const totalPages = Math.ceil(filteredAndSortedServers.length / itemsPerPage);
+  useEffect(()=>{
+    if (totalPages<=itemsPerPage){
+    setCurrentPage(1)
+  }
+  },[totalPages, itemsPerPage])
+  
 
   return (
     <VpnServerContext.Provider
